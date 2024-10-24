@@ -99,37 +99,39 @@ public class ProductoController {
     }
     
     @GetMapping("/generar_pdf")
-    public ResponseEntity<InputStreamResource>generarPDf(HttpSession sesion) throws IOException{
-    	// formar los datos para pasarle al pdf
-    	List<Pedido>productoSesion = null;
-    	if(sesion.getAttribute("carrito")  == null) {
-    		productoSesion = new ArrayList<Pedido>();
-    	}else {
-    		productoSesion = (List<Pedido>)sesion.getAttribute("carrito");
-    	}
-    	List<DetallePedidoEntity>detallePedidoEntities = new ArrayList<DetallePedidoEntity>();
-    	Double totalPedido = 0.0;
-    	
-    	for(Pedido ped: productoSesion) {
-    		DetallePedidoEntity det = new DetallePedidoEntity();
-    		ProductoEntity productoEntity = productoService.buscarProductoPorId(ped.getProductoId());
-    		det.setProductoEntity(productoEntity);
-    		det.setCantidad(ped.getCantidad());
-    		detallePedidoEntities.add(det);
-    		totalPedido += productoEntity.getPrecio() * ped.getCantidad();
-    	}
-    	
-    	Map<String, Object> datosPdf = new HashMap<String, Object>();
-    	datosPdf.put("factura", detallePedidoEntities);
-    	datosPdf.put("precio_total", totalPedido);
-    	
-    	ByteArrayInputStream pdfBytes = pdfService.generarPdf("template_pdf", datosPdf);
-    	
-    	HttpHeaders headers = new HttpHeaders();
-    	headers.add("Content-Disposition", "inline; filename=productos.pdf");
-    	
-    	return ResponseEntity.ok()
-    			.headers(headers)
-    			.contentType(MediaType.APPLICATION_PDF)
-    			.body(new InputStreamResource(pdfBytes));
-    }
+    public ResponseEntity<InputStreamResource>generarPDf(HttpSession sesion) throws IOException {
+		// formar los datos para pasarle al pdf
+		List<Pedido> productoSesion = null;
+		if (sesion.getAttribute("carrito") == null) {
+			productoSesion = new ArrayList<Pedido>();
+		} else {
+			productoSesion = (List<Pedido>) sesion.getAttribute("carrito");
+		}
+		List<DetallePedidoEntity> detallePedidoEntities = new ArrayList<DetallePedidoEntity>();
+		Double totalPedido = 0.0;
+
+		for (Pedido ped : productoSesion) {
+			DetallePedidoEntity det = new DetallePedidoEntity();
+			ProductoEntity productoEntity = productoService.buscarProductoPorId(ped.getProductoId());
+			det.setProductoEntity(productoEntity);
+			det.setCantidad(ped.getCantidad());
+			detallePedidoEntities.add(det);
+			totalPedido += productoEntity.getPrecio() * ped.getCantidad();
+		}
+
+		Map<String, Object> datosPdf = new HashMap<String, Object>();
+		datosPdf.put("factura", detallePedidoEntities);
+		datosPdf.put("precio_total", totalPedido);
+
+		ByteArrayInputStream pdfBytes = pdfService.generarPdf("template_pdf", datosPdf);
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.add("Content-Disposition", "inline; filename=productos.pdf");
+
+		return ResponseEntity.ok()
+				.headers(headers)
+				.contentType(MediaType.APPLICATION_PDF)
+				.body(new InputStreamResource(pdfBytes));
+
+	}
+}

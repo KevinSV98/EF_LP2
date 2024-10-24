@@ -14,9 +14,6 @@ import pe.com.cibertec.EF_LP2.utils.Utilitarios;
 public class UsuarioServiceImpl implements UsuarioService {
 	private final UsuarioRepository usuarioRepository;
 
-    UsuarioServiceImpl(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
-    }
 
 	@Override
 	public void crearUsuario(UsuarioEntity usuarioEntity, MultipartFile foto) {

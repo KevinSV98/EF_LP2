@@ -20,10 +20,6 @@ public class UsuarioController {
 	
 	private final UsuarioService usuarioService;
 
-    UsuarioController(UsuarioService usuarioService) {
-        this.usuarioService = usuarioService;
-    }
-	
 	@GetMapping("/registrar_usuario")
 	public String mostrarRegistrarUsuario(Model model) {
 		model.addAttribute("usuario", new UsuarioEntity());

@@ -13,10 +13,6 @@ import pe.com.cibertec.EF_LP2.service.ProductoService;
 public class ProductoServiceImpl implements ProductoService {
 	
     private final ProductoRepository productoRepository;
-    
-    ProductoServiceImpl(ProductoRepository ProductoServiceImpl) {
-        this.productoRepository = ProductoServiceImpl;
-    }
 
     @Override
     public List<ProductoEntity> buscarTodosProductos() {
