@@ -35,6 +35,8 @@ package pe.com.cibertec.EF_LP2.model.entity;
 		@Column(name = "url_imagen", nullable = false)
 		private String urlImagen;
 
+		@Column(name="Categoria",nullable = false)
+		private String categoria;
 
 	}
 

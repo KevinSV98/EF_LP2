@@ -10,14 +10,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import pe.com.cibertec.EF_LP2.model.entity.DetallePedidoEntity;
 import pe.com.cibertec.EF_LP2.model.entity.Pedido;
 import pe.com.cibertec.EF_LP2.model.entity.ProductoEntity;
 import pe.com.cibertec.EF_LP2.model.entity.UsuarioEntity;
+import pe.com.cibertec.EF_LP2.repository.ProductoRepository;
 import pe.com.cibertec.EF_LP2.repository.UsuarioRepository;
 import pe.com.cibertec.EF_LP2.service.ProductoService;
 import pe.com.cibertec.EF_LP2.service.UsuarioService;
@@ -37,6 +36,49 @@ public class ProductoController {
     private final ProductoService productoService;
     private final UsuarioService usuarioService;
     private final PdfService pdfService;
+
+
+	@GetMapping("/Lista_producto")
+	public String home(Model model) {
+		List<ProductoEntity>listaProductos = productoService.buscarTodosProductos();
+		model.addAttribute("Lista_producto", listaProductos);
+		return "Lista_producto";
+	}
+
+	@GetMapping("/detalle_producto/{id}")
+	public String verDetalle(Model model, @PathVariable("id")Integer id) {
+		ProductoEntity productoEncontrado = productoService.buscarProductoPorId(id);
+		model.addAttribute("user", productoEncontrado);
+		return "detalle_producto";
+	}
+
+	@GetMapping("/delete/{id}")
+	public String eliminarProducto(@PathVariable("id")Integer id) {
+		productoService.eliminarProducto(id);
+		return "redirect:/";
+	}
+
+	@GetMapping("/registrar_producto")
+	public String mostrarRegistrarProducto(Model model) {
+		model.addAttribute("user", new UsuarioEntity());
+		return "registrar_producto";
+	}
+
+	@GetMapping("/editar_producto/{id}")
+	public String mostrarEditarProducto(@PathVariable("id") Integer id, Model model) {
+		ProductoEntity productoEncontrado = productoService.buscarProductoPorId(id);
+		model.addAttribute("user", productoEncontrado);
+		return "editar_producto";
+	}
+
+	@PostMapping("/editar_producto/{id}")
+	public String editarProducto(@PathVariable("id")Integer id,
+								 @ModelAttribute("user") ProductoEntity user, Model model) {
+
+		productoService.actualizarProducto(id, user);
+		return "redirect:/";
+
+	}
 
     @GetMapping("/menu")
     public String mostrarMenu(Model model, HttpSession session) {
